@@ -1,24 +1,52 @@
-import analytics from '@react-native-firebase/analytics';
-import crashlytics from '@react-native-firebase/crashlytics';
+let analytics: (() => any) | null = null;
+let crashlytics: (() => any) | null = null;
+
+try {
+  analytics = require('@react-native-firebase/analytics').default;
+} catch {
+  // Firebase Analytics not available
+}
+
+try {
+  crashlytics = require('@react-native-firebase/crashlytics').default;
+} catch {
+  // Firebase Crashlytics not available
+}
 
 export async function logScreenView(screenName: string) {
-  await analytics().logScreenView({
-    screen_name: screenName,
-    screen_class: screenName,
-  });
+  try {
+    await analytics?.().logScreenView({
+      screen_name: screenName,
+      screen_class: screenName,
+    });
+  } catch {
+    // silently fail
+  }
 }
 
 export async function logGameEvent(
   event: string,
   params?: Record<string, string | number>
 ) {
-  await analytics().logEvent(event, params);
+  try {
+    await analytics?.().logEvent(event, params);
+  } catch {
+    // silently fail
+  }
 }
 
 export async function logCrashlyticsInfo(message: string) {
-  crashlytics().log(message);
+  try {
+    crashlytics?.().log(message);
+  } catch {
+    // silently fail
+  }
 }
 
 export async function setAnalyticsUserId(userId: string) {
-  await analytics().setUserId(userId);
+  try {
+    await analytics?.().setUserId(userId);
+  } catch {
+    // silently fail
+  }
 }

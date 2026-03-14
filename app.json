@@ -7,8 +7,6 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
     "plugins": [
-      "@react-native-firebase/app",
-      "@react-native-firebase/crashlytics",
       [
         "expo-build-properties",
         {
@@ -33,7 +31,6 @@
     "android": {
       "package": "com.serenitystudio.guessmynumber",
       "versionCode": 1,
-      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "backgroundColor": "#0f0c29",
         "foregroundImage": "./assets/android-icon-foreground.png",
