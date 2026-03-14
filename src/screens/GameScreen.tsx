@@ -10,6 +10,7 @@ import { SuccessOverlay } from '../components/SuccessOverlay';
 import { useGameStore } from '../store/gameStore';
 import { Colors } from '../constants/colors';
 import { wp, hp } from '../constants/layout';
+import { DIFFICULTY_CONFIGS } from '../utils/gameUtils';
 
 export function GameScreen() {
   const gameStatus = useGameStore((s) => s.gameStatus);
@@ -18,8 +19,15 @@ export function GameScreen() {
   const maxRange = useGameStore((s) => s.maxRange);
   const attempts = useGameStore((s) => s.attempts);
   const maxAttempts = useGameStore((s) => s.maxAttempts);
+  const difficulty = useGameStore((s) => s.difficulty);
 
   const isGameOver = gameStatus === 'won' || gameStatus === 'lost';
+  const diffConfig = DIFFICULTY_CONFIGS[difficulty];
+
+  const diffColor =
+    difficulty === 'easy' ? Colors.accent.teal
+    : difficulty === 'hard' ? Colors.accent.coral
+    : Colors.accent.gold;
 
   const attemptsUsed = useMemo(
     () => maxAttempts - attempts,
@@ -63,7 +71,12 @@ export function GameScreen() {
       </View>
 
       <View style={styles.footer}>
-        <Text style={styles.footerText}>Tap a number, press enter to guess</Text>
+        <View style={[styles.diffBadge, { borderColor: `${diffColor}40` }]}>
+          <View style={[styles.diffDot, { backgroundColor: diffColor }]} />
+          <Text style={[styles.diffBadgeText, { color: diffColor }]}>
+            {diffConfig.label}
+          </Text>
+        </View>
       </View>
     </LinearGradient>
   );
@@ -98,12 +111,27 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(45, 212, 191, 0.06)',
   },
   footer: {
-    paddingBottom: hp('2%'),
+    paddingBottom: hp('2.5%'),
     alignItems: 'center',
   },
-  footerText: {
-    fontSize: wp('2.8%'),
-    color: Colors.text.muted,
+  diffBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: wp('1.5%'),
+    paddingHorizontal: wp('4%'),
+    paddingVertical: hp('0.6%'),
+    borderRadius: 20,
+    borderWidth: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+  },
+  diffDot: {
+    width: wp('2%'),
+    height: wp('2%'),
+    borderRadius: wp('1%'),
+  },
+  diffBadgeText: {
+    fontSize: wp('3%'),
+    fontWeight: '700',
     letterSpacing: 0.5,
   },
 });

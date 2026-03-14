@@ -16,8 +16,9 @@ import { Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
 import { wp, hp } from '../constants/layout';
 import { useGameStore } from '../store/gameStore';
+import { DIFFICULTY_CONFIGS, type Difficulty } from '../utils/gameUtils';
 
-type ModalType = 'how_to_play' | 'about' | 'rate_us' | 'feedback' | null;
+type ModalType = 'how_to_play' | 'about' | 'rate_us' | 'feedback' | 'difficulty' | null;
 
 interface MenuItem {
   id: string;
@@ -27,6 +28,7 @@ interface MenuItem {
 
 const MENU_ITEMS: MenuItem[] = [
   { id: 'new_game', label: 'New Game', icon: 'restart' },
+  { id: 'difficulty', label: 'Difficulty', icon: 'speedometer' },
   { id: 'how_to_play', label: 'How to Play', icon: 'help-circle-outline' },
   { id: 'rate_us', label: 'Rate Us', icon: 'star-outline' },
   { id: 'feedback', label: 'Feedback', icon: 'message-text-outline' },
@@ -134,6 +136,7 @@ function HeaderComponent() {
             <TouchableWithoutFeedback>
               <View style={styles.infoCard}>
                 {activeModal === 'how_to_play' && <HowToPlayContent onClose={closeModal} />}
+                {activeModal === 'difficulty' && <DifficultyContent onClose={closeModal} />}
                 {activeModal === 'about' && <AboutContent onClose={closeModal} />}
                 {activeModal === 'rate_us' && <RateUsContent onClose={closeModal} />}
                 {activeModal === 'feedback' && <FeedbackContent onClose={closeModal} />}
@@ -207,6 +210,86 @@ function AboutRow({ label, value }: { label: string; value: string }) {
       <Text style={styles.aboutLabel}>{label}</Text>
       <Text style={styles.aboutValue}>{value}</Text>
     </View>
+  );
+}
+
+// ── Difficulty ──
+
+const DIFFICULTY_ICONS: Record<Difficulty, string> = {
+  easy: 'emoticon-happy-outline',
+  medium: 'emoticon-neutral-outline',
+  hard: 'emoticon-devil-outline',
+};
+
+const DIFFICULTY_COLORS: Record<Difficulty, string> = {
+  easy: Colors.accent.teal,
+  medium: Colors.accent.gold,
+  hard: Colors.accent.coral,
+};
+
+function DifficultyContent({ onClose }: { onClose: () => void }) {
+  const currentDifficulty = useGameStore((s) => s.difficulty);
+  const setDifficulty = useGameStore((s) => s.setDifficulty);
+
+  const handleSelect = useCallback(
+    (d: Difficulty) => {
+      setDifficulty(d);
+      onClose();
+    },
+    [setDifficulty, onClose]
+  );
+
+  const levels: Difficulty[] = ['easy', 'medium', 'hard'];
+
+  return (
+    <>
+      <MaterialCommunityIcons
+        name="speedometer"
+        size={wp('10%')}
+        color={Colors.accent.primaryLight}
+      />
+      <Text style={styles.infoTitle}>Difficulty</Text>
+      <Text style={styles.diffSubtitle}>Choose your challenge level</Text>
+
+      <View style={styles.diffContainer}>
+        {levels.map((d) => {
+          const config = DIFFICULTY_CONFIGS[d];
+          const isActive = d === currentDifficulty;
+          const color = DIFFICULTY_COLORS[d];
+          return (
+            <Pressable
+              key={d}
+              style={[
+                styles.diffCard,
+                isActive && { borderColor: color, backgroundColor: `${color}15` },
+              ]}
+              onPress={() => handleSelect(d)}
+            >
+              <View style={styles.diffCardHeader}>
+                <MaterialCommunityIcons
+                  name={DIFFICULTY_ICONS[d] as keyof typeof MaterialCommunityIcons.glyphMap}
+                  size={wp('6%')}
+                  color={isActive ? color : Colors.text.muted}
+                />
+                <Text style={[styles.diffLabel, isActive && { color }]}>
+                  {config.label}
+                </Text>
+                {isActive && (
+                  <View style={[styles.diffActiveBadge, { backgroundColor: color }]}>
+                    <MaterialCommunityIcons name="check" size={wp('3%')} color="#fff" />
+                  </View>
+                )}
+              </View>
+              <Text style={styles.diffDesc}>{config.description}</Text>
+            </Pressable>
+          );
+        })}
+      </View>
+
+      <Pressable onPress={onClose} style={styles.laterButton}>
+        <Text style={styles.laterText}>Cancel</Text>
+      </Pressable>
+    </>
   );
 }
 
@@ -525,6 +608,51 @@ const styles = StyleSheet.create({
   },
   aboutSpacer: {
     height: hp('0.5%'),
+  },
+
+  // ── Difficulty ──
+  diffSubtitle: {
+    fontSize: wp('3.4%'),
+    color: Colors.text.secondary,
+    marginBottom: hp('2%'),
+    textAlign: 'center',
+  },
+  diffContainer: {
+    width: '100%',
+    gap: hp('1%'),
+    marginBottom: hp('1%'),
+  },
+  diffCard: {
+    flexDirection: 'column',
+    padding: wp('4%'),
+    borderRadius: 14,
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.08)',
+    backgroundColor: 'rgba(255, 255, 255, 0.03)',
+  },
+  diffCardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: wp('2.5%'),
+    marginBottom: hp('0.3%'),
+  },
+  diffLabel: {
+    fontSize: wp('4%'),
+    fontWeight: '700',
+    color: Colors.text.primary,
+    flex: 1,
+  },
+  diffActiveBadge: {
+    width: wp('5.5%'),
+    height: wp('5.5%'),
+    borderRadius: wp('2.75%'),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  diffDesc: {
+    fontSize: wp('3%'),
+    color: Colors.text.muted,
+    marginLeft: wp('8.5%'),
   },
 
   // ── Rate Us ──

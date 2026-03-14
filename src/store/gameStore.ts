@@ -3,8 +3,8 @@ import {
   generateSecretNumber,
   evaluateGuess,
   MIN_NUMBER,
-  MAX_NUMBER,
-  MAX_ATTEMPTS,
+  DIFFICULTY_CONFIGS,
+  type Difficulty,
 } from '../utils/gameUtils';
 
 export type GameStatus = 'playing' | 'won' | 'lost';
@@ -18,6 +18,7 @@ export interface GameState {
   currentInput: string;
   gameStatus: GameStatus;
   lastGuess: number | null;
+  difficulty: Difficulty;
 }
 
 export interface GameActions {
@@ -25,20 +26,23 @@ export interface GameActions {
   pressBackspace: () => void;
   submitGuess: () => void;
   resetGame: () => void;
+  setDifficulty: (d: Difficulty) => void;
 }
 
 export type GameStore = GameState & GameActions;
 
-function createInitialState(): GameState {
+function createInitialState(difficulty: Difficulty = 'medium'): GameState {
+  const config = DIFFICULTY_CONFIGS[difficulty];
   return {
-    secretNumber: generateSecretNumber(),
+    secretNumber: generateSecretNumber(MIN_NUMBER, config.maxNumber),
     minRange: MIN_NUMBER,
-    maxRange: MAX_NUMBER,
-    attempts: MAX_ATTEMPTS,
-    maxAttempts: MAX_ATTEMPTS,
+    maxRange: config.maxNumber,
+    attempts: config.attempts,
+    maxAttempts: config.attempts,
     currentInput: '',
     gameStatus: 'playing',
     lastGuess: null,
+    difficulty,
   };
 }
 
@@ -46,13 +50,14 @@ export const useGameStore = create<GameStore>((set, get) => ({
   ...createInitialState(),
 
   pressDigit: (digit: string) => {
-    const { currentInput, gameStatus } = get();
+    const { currentInput, gameStatus, difficulty } = get();
     if (gameStatus !== 'playing') return;
     if (currentInput.length >= 3) return;
 
+    const maxNum = DIFFICULTY_CONFIGS[difficulty].maxNumber;
     const newInput = currentInput + digit;
     const num = parseInt(newInput, 10);
-    if (num > MAX_NUMBER) return;
+    if (num > maxNum) return;
 
     set({ currentInput: newInput });
   },
@@ -106,6 +111,11 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   resetGame: () => {
-    set(createInitialState());
+    const { difficulty } = get();
+    set(createInitialState(difficulty));
+  },
+
+  setDifficulty: (d: Difficulty) => {
+    set(createInitialState(d));
   },
 }));

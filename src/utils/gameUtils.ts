@@ -1,8 +1,37 @@
 export type GuessResult = 'too_high' | 'too_low' | 'correct';
+export type Difficulty = 'easy' | 'medium' | 'hard';
 
 export const MIN_NUMBER = 0;
 export const MAX_NUMBER = 100;
 export const MAX_ATTEMPTS = 6;
+
+export interface DifficultyConfig {
+  label: string;
+  maxNumber: number;
+  attempts: number;
+  description: string;
+}
+
+export const DIFFICULTY_CONFIGS: Record<Difficulty, DifficultyConfig> = {
+  easy: {
+    label: 'Easy',
+    maxNumber: 50,
+    attempts: 8,
+    description: 'Range 0-50, 8 attempts',
+  },
+  medium: {
+    label: 'Medium',
+    maxNumber: 100,
+    attempts: 6,
+    description: 'Range 0-100, 6 attempts',
+  },
+  hard: {
+    label: 'Hard',
+    maxNumber: 200,
+    attempts: 5,
+    description: 'Range 0-200, 5 attempts',
+  },
+};
 
 export function generateSecretNumber(
   min: number = MIN_NUMBER,
