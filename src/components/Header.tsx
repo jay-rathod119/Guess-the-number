@@ -17,6 +17,7 @@ import { Colors } from '../constants/colors';
 import { wp, hp } from '../constants/layout';
 import { useGameStore } from '../store/gameStore';
 import { DIFFICULTY_CONFIGS, type Difficulty } from '../utils/gameUtils';
+import { getStoreUrl } from '../services/configService';
 
 type ModalType = 'how_to_play' | 'about' | 'rate_us' | 'feedback' | 'difficulty' | null;
 
@@ -35,10 +36,7 @@ const MENU_ITEMS: MenuItem[] = [
   { id: 'about', label: 'About', icon: 'information-outline' },
 ];
 
-const STORE_URL =
-  Platform.OS === 'ios'
-    ? 'https://apps.apple.com'
-    : 'https://play.google.com/store';
+const STORE_URL = getStoreUrl();
 
 function HeaderComponent() {
   const [menuVisible, setMenuVisible] = useState(false);

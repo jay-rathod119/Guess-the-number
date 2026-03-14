@@ -1,21 +1,22 @@
 {
   "expo": {
-    "name": "GuessMyNumberApp",
+    "name": "Guess My Number",
     "slug": "GuessMyNumberApp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#0f0c29"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.serenitystudio.guessmynumber"
     },
     "android": {
-      "package": "com.jayrathod.guessthenumber",
+      "package": "com.serenitystudio.guessmynumber",
       "versionCode": 1,
       "adaptiveIcon": {
         "backgroundColor": "#0f0c29",

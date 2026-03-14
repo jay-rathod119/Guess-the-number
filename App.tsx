@@ -11,7 +11,7 @@ import { Colors } from './src/constants/colors';
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
 function AppContent() {
-  const { needsUpdate, isChecking } = useForceUpdate();
+  const { needsUpdate, isChecking, updateMessage, isMaintenance } = useForceUpdate();
   const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
@@ -22,10 +22,16 @@ function AppContent() {
     setShowSplash(false);
   }, []);
 
+  const showBlocker = !isChecking && (needsUpdate || isMaintenance);
+
   return (
     <View style={styles.root}>
       <SafeAreaView style={styles.safeArea} edges={['top']}>
-        <ForceUpdateModal visible={!isChecking && needsUpdate} />
+        <ForceUpdateModal
+          visible={showBlocker}
+          message={updateMessage}
+          isMaintenance={isMaintenance}
+        />
         <GameScreen />
       </SafeAreaView>
 

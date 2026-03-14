@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useCallback } from 'react';
 import {
   View,
   Text,
@@ -6,24 +6,26 @@ import {
   Modal,
   Pressable,
   Linking,
-  Platform,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
 import { wp, hp } from '../constants/layout';
+import { getStoreUrl } from '../services/configService';
 
 interface ForceUpdateModalProps {
   visible: boolean;
+  message?: string;
+  isMaintenance?: boolean;
 }
 
-function ForceUpdateModalComponent({ visible }: ForceUpdateModalProps) {
-  const handleUpdate = () => {
-    const storeUrl =
-      Platform.OS === 'ios'
-        ? 'https://apps.apple.com'
-        : 'https://play.google.com/store';
-    Linking.openURL(storeUrl);
-  };
+function ForceUpdateModalComponent({
+  visible,
+  message,
+  isMaintenance = false,
+}: ForceUpdateModalProps) {
+  const handleUpdate = useCallback(() => {
+    Linking.openURL(getStoreUrl());
+  }, []);
 
   return (
     <Modal
@@ -36,29 +38,36 @@ function ForceUpdateModalComponent({ visible }: ForceUpdateModalProps) {
         <View style={styles.card}>
           <View style={styles.iconCircle}>
             <MaterialCommunityIcons
-              name="cellphone-arrow-down"
+              name={isMaintenance ? 'wrench-outline' : 'cellphone-arrow-down'}
               size={wp('10%')}
               color={Colors.accent.primary}
             />
           </View>
-          <Text style={styles.title}>Update Required</Text>
-          <Text style={styles.message}>
-            A new version is available. Please update the app to continue playing.
+          <Text style={styles.title}>
+            {isMaintenance ? 'Under Maintenance' : 'Update Required'}
           </Text>
-          <Pressable
-            style={({ pressed }) => [
-              styles.button,
-              pressed && styles.buttonPressed,
-            ]}
-            onPress={handleUpdate}
-          >
-            <MaterialCommunityIcons
-              name="download"
-              size={wp('4.5%')}
-              color="#ffffff"
-            />
-            <Text style={styles.buttonText}>Update Now</Text>
-          </Pressable>
+          <Text style={styles.message}>
+            {message ||
+              (isMaintenance
+                ? 'We are performing scheduled maintenance. Please check back shortly.'
+                : 'A new version is available. Please update the app to continue playing.')}
+          </Text>
+          {!isMaintenance && (
+            <Pressable
+              style={({ pressed }) => [
+                styles.button,
+                pressed && styles.buttonPressed,
+              ]}
+              onPress={handleUpdate}
+            >
+              <MaterialCommunityIcons
+                name="google-play"
+                size={wp('4.5%')}
+                color="#ffffff"
+              />
+              <Text style={styles.buttonText}>Update Now</Text>
+            </Pressable>
+          )}
         </View>
       </View>
     </Modal>

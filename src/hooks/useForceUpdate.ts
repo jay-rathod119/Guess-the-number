@@ -6,9 +6,20 @@ import Constants from 'expo-constants';
 const APP_VERSION =
   Constants.expoConfig?.version ?? Constants.manifest?.version ?? '1.0.0';
 
-export function useForceUpdate() {
-  const [needsUpdate, setNeedsUpdate] = useState(false);
-  const [isChecking, setIsChecking] = useState(true);
+export interface ForceUpdateState {
+  needsUpdate: boolean;
+  isChecking: boolean;
+  updateMessage: string;
+  isMaintenance: boolean;
+}
+
+export function useForceUpdate(): ForceUpdateState {
+  const [state, setState] = useState<ForceUpdateState>({
+    needsUpdate: false,
+    isChecking: true,
+    updateMessage: '',
+    isMaintenance: false,
+  });
 
   useEffect(() => {
     let cancelled = false;
@@ -18,13 +29,40 @@ export function useForceUpdate() {
         const config = await fetchAppConfig();
         if (cancelled) return;
 
-        if (config.forceUpdate && compareVersions(APP_VERSION, config.latestVersion) < 0) {
-          setNeedsUpdate(true);
+        if (config.maintenanceMode) {
+          setState({
+            needsUpdate: false,
+            isChecking: false,
+            updateMessage: config.updateMessage,
+            isMaintenance: true,
+          });
+          return;
         }
+
+        const belowMinimum = compareVersions(APP_VERSION, config.minimumVersion) < 0;
+        const belowLatest = compareVersions(APP_VERSION, config.latestVersion) < 0;
+        const shouldForce = config.forceUpdate && belowLatest;
+
+        if (belowMinimum || shouldForce) {
+          setState({
+            needsUpdate: true,
+            isChecking: false,
+            updateMessage: config.updateMessage,
+            isMaintenance: false,
+          });
+          return;
+        }
+
+        setState({
+          needsUpdate: false,
+          isChecking: false,
+          updateMessage: '',
+          isMaintenance: false,
+        });
       } catch {
-        // Silently fail - don't block the user
-      } finally {
-        if (!cancelled) setIsChecking(false);
+        if (!cancelled) {
+          setState((prev) => ({ ...prev, isChecking: false }));
+        }
       }
     }
 
@@ -34,5 +72,5 @@ export function useForceUpdate() {
     };
   }, []);
 
-  return { needsUpdate, isChecking };
+  return state;
 }
