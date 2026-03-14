@@ -43,5 +43,6 @@ google-services.json
 # typescript
 *.tsbuildinfo
 
-# generated native folders
+# generated native folders (EAS runs prebuild to regenerate these)
+/android
 /ios
