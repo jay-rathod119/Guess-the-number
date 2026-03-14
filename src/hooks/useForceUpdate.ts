@@ -4,7 +4,9 @@ import { compareVersions } from '../utils/gameUtils';
 import Constants from 'expo-constants';
 
 const APP_VERSION =
-  Constants.expoConfig?.version ?? Constants.manifest?.version ?? '1.0.0';
+  Constants.expoConfig?.version ??
+  (Constants.manifest as Record<string, unknown> | null)?.version as string ??
+  '1.0.0';
 
 export interface ForceUpdateState {
   needsUpdate: boolean;

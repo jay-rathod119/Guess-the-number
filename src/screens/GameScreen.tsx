@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, StatusBar } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Header } from '../components/Header';
@@ -11,6 +11,7 @@ import { useGameStore } from '../store/gameStore';
 import { Colors } from '../constants/colors';
 import { wp, hp } from '../constants/layout';
 import { DIFFICULTY_CONFIGS } from '../utils/gameUtils';
+import { logScreenView, logGameEvent } from '../services/firebaseService';
 
 export function GameScreen() {
   const gameStatus = useGameStore((s) => s.gameStatus);
@@ -23,6 +24,20 @@ export function GameScreen() {
 
   const isGameOver = gameStatus === 'won' || gameStatus === 'lost';
   const diffConfig = DIFFICULTY_CONFIGS[difficulty];
+  const prevStatus = useRef(gameStatus);
+
+  useEffect(() => {
+    logScreenView('GameScreen').catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    if (prevStatus.current === 'playing' && gameStatus === 'won') {
+      logGameEvent('game_won', { difficulty, attempts_used: maxAttempts - attempts }).catch(() => {});
+    } else if (prevStatus.current === 'playing' && gameStatus === 'lost') {
+      logGameEvent('game_lost', { difficulty }).catch(() => {});
+    }
+    prevStatus.current = gameStatus;
+  }, [gameStatus, difficulty, maxAttempts, attempts]);
 
   const diffColor =
     difficulty === 'easy' ? Colors.accent.teal
