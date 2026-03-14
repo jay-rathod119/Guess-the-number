@@ -4,7 +4,7 @@
     "slug": "GuessMyNumberApp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/appLogo.png",
     "userInterfaceStyle": "dark",
     "plugins": [
       "@react-native-firebase/app",
@@ -22,7 +22,7 @@
       "expo-font"
     ],
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/appLogo.png",
       "resizeMode": "contain",
       "backgroundColor": "#0f0c29"
     },
@@ -36,9 +36,7 @@
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "backgroundColor": "#0f0c29",
-        "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
-        "monochromeImage": "./assets/android-icon-monochrome.png"
+        "foregroundImage": "./assets/appLogo.png"
       }
     },
     "web": {
