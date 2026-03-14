@@ -1,0 +1,46 @@
+export const Colors = {
+  background: {
+    gradientStart: '#0f0c29',
+    gradientMid: '#302b63',
+    gradientEnd: '#24243e',
+  },
+  surface: {
+    card: 'rgba(255, 255, 255, 0.06)',
+    cardBorder: 'rgba(255, 255, 255, 0.12)',
+    input: 'rgba(0, 0, 0, 0.35)',
+    inputBorder: 'rgba(255, 255, 255, 0.18)',
+    inputText: '#ffffff',
+    keypad: 'rgba(255, 255, 255, 0.07)',
+    keypadBorder: 'rgba(255, 255, 255, 0.15)',
+    keypadText: 'rgba(255, 255, 255, 0.75)',
+    keypadPressed: 'rgba(255, 255, 255, 0.14)',
+  },
+  accent: {
+    primary: '#7c5cfc',
+    primaryLight: '#a78bfa',
+    primaryDark: '#5b3fd4',
+    glow: 'rgba(124, 92, 252, 0.35)',
+    coral: '#ff6b6b',
+    coralDark: '#ee5a5a',
+    gold: '#fbbf24',
+    goldGlow: 'rgba(251, 191, 36, 0.3)',
+    teal: '#2dd4bf',
+    tealGlow: 'rgba(45, 212, 191, 0.25)',
+  },
+  text: {
+    primary: '#ffffff',
+    secondary: 'rgba(255, 255, 255, 0.65)',
+    muted: 'rgba(255, 255, 255, 0.35)',
+    dark: '#1a1a2e',
+  },
+  range: {
+    track: 'rgba(255, 255, 255, 0.12)',
+    filled: '#7c5cfc',
+    filledGlow: 'rgba(124, 92, 252, 0.4)',
+    marker: '#ffffff',
+  },
+  header: {
+    background: 'rgba(0, 0, 0, 0.2)',
+    text: '#ffffff',
+  },
+} as const;
