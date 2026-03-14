@@ -76,6 +76,10 @@ function SuccessOverlayComponent({
     opacity: glowOpacity.value,
   }));
 
+  const iconRowStyle = useAnimatedStyle(() => ({
+    opacity: glowOpacity.value,
+  }));
+
   return (
     <Animated.View style={[styles.container, containerStyle]}>
       <Animated.View style={emojiStyle}>
@@ -98,7 +102,7 @@ function SuccessOverlayComponent({
         </View>
       </Animated.View>
 
-      <Animated.View style={[styles.iconRow, { opacity: glowOpacity }]}>
+      <Animated.View style={[styles.iconRow, iconRowStyle]}>
         <MaterialCommunityIcons
           name={isLoss ? 'emoticon-sad-outline' : 'star-four-points'}
           size={wp('4%')}

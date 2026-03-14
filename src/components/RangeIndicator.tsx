@@ -9,15 +9,17 @@ import Animated, {
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
 import { wp, hp } from '../constants/layout';
-import { MIN_NUMBER, MAX_NUMBER } from '../utils/gameUtils';
+import { MIN_NUMBER, DIFFICULTY_CONFIGS, type Difficulty } from '../utils/gameUtils';
 
 interface RangeIndicatorProps {
   minRange: number;
   maxRange: number;
+  difficulty: Difficulty;
 }
 
-function RangeIndicatorComponent({ minRange, maxRange }: RangeIndicatorProps) {
-  const totalRange = MAX_NUMBER - MIN_NUMBER;
+function RangeIndicatorComponent({ minRange, maxRange, difficulty }: RangeIndicatorProps) {
+  const totalMax = DIFFICULTY_CONFIGS[difficulty].maxNumber;
+  const totalRange = totalMax - MIN_NUMBER;
   const leftPercent = ((minRange - MIN_NUMBER) / totalRange) * 100;
   const rightPercent = ((maxRange - MIN_NUMBER) / totalRange) * 100;
 

@@ -60,7 +60,7 @@ export function GameScreen() {
             isLoss={gameStatus === 'lost'}
           />
         ) : (
-          <RangeIndicator minRange={minRange} maxRange={maxRange} />
+          <RangeIndicator minRange={minRange} maxRange={maxRange} difficulty={difficulty} />
         )}
 
         <AttemptsIndicator attempts={attempts} maxAttempts={maxAttempts} />
