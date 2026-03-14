@@ -1,52 +1,24 @@
-let analytics: (() => any) | null = null;
-let crashlytics: (() => any) | null = null;
-
-try {
-  analytics = require('@react-native-firebase/analytics').default;
-} catch {
-  // Firebase Analytics not available
-}
-
-try {
-  crashlytics = require('@react-native-firebase/crashlytics').default;
-} catch {
-  // Firebase Crashlytics not available
-}
+import analytics from '@react-native-firebase/analytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 export async function logScreenView(screenName: string) {
-  try {
-    await analytics?.().logScreenView({
-      screen_name: screenName,
-      screen_class: screenName,
-    });
-  } catch {
-    // silently fail
-  }
+  await analytics().logScreenView({
+    screen_name: screenName,
+    screen_class: screenName,
+  });
 }
 
 export async function logGameEvent(
   event: string,
   params?: Record<string, string | number>
 ) {
-  try {
-    await analytics?.().logEvent(event, params);
-  } catch {
-    // silently fail
-  }
+  await analytics().logEvent(event, params);
 }
 
 export async function logCrashlyticsInfo(message: string) {
-  try {
-    crashlytics?.().log(message);
-  } catch {
-    // silently fail
-  }
+  crashlytics().log(message);
 }
 
 export async function setAnalyticsUserId(userId: string) {
-  try {
-    await analytics?.().setUserId(userId);
-  } catch {
-    // silently fail
-  }
+  await analytics().setUserId(userId);
 }
