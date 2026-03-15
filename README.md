@@ -4,7 +4,11 @@ A sleek, modern number guessing game built with React Native and Expo. Try to gu
 
 ## Screenshots
 
-The app features a deep indigo gradient background, glassmorphic keypad buttons, an animated range indicator, and smooth animations throughout.
+| Title & tagline | Game screen | Win screen | Game over |
+|-----------------|-------------|------------|-----------|
+| ![Title](assets/screenshots/title.jpg) | ![Game](assets/screenshots/game.jpg) | ![Win](assets/screenshots/win.jpg) | ![Game Over](assets/screenshots/gameover.jpg) |
+
+The app features a deep indigo gradient background, glassmorphic keypad buttons, an animated range indicator, three difficulty levels (Easy, Medium, Hard), and smooth animations throughout.
 
 ## Features
 
